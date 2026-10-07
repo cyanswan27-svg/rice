@@ -1,0 +1,115 @@
+// -*- mode: jsonc -*-
+{
+  "layer": "top",
+  "position": "top",
+  "height": 34,
+  "margin-top": 0,
+  "margin-left": 0,
+  "margin-right": 0,
+  "spacing": 4,
+
+  // --- Module Layout ---
+  "modules-left": [
+    "custom/logo",
+    "custom/bluetooth",
+    "hyprland/workspaces",
+    "wlr/taskbar",
+    "custom/hydra"
+  ],
+  "modules-center": [
+    "clock#date",
+    "custom/terminal",
+    "clock#time"
+  ],
+  "modules-right": [
+    "custom/nmap",
+    "network",
+    "battery",
+    "pulseaudio/slider", 
+    "pulseaudio",        // Replaced custom/audio with the real dynamic volume tracker
+    "custom/Arch"
+  ],
+
+  // --- Modules Configuration ---
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "on-click": "activate"
+  },
+  "custom/nmap": {
+    "format": "Nmap",
+    "tooltip": false,
+    "on-click": "alacritty -e bash -c 'man hydra; exec bash'"
+  },
+  "custom/hydra": {
+    "format": "Hydra",
+    "tooltip": false,
+    "on-click": "alacritty -e bash -c 'man hydra; exec bash'"
+  },
+  "custom/bluetooth": {
+    "format": "Bluetooth",
+    "tooltip": false,
+    "on-click": "alacritty -e bash -c 'bluetoothctl; exec bash'"
+  },
+  "custom/Arch": {
+    "format": "ARCH ∫",
+    "tooltip": false,
+    "on-click": "firefox file:///usr/share/doc/arch-wiki/html/en/Main_page.html"
+  },
+
+  // Dynamic Volume % display and click-to-mute button
+  "pulseaudio": {
+    "format": "{volume}% ",
+    "format-muted": " Muted ",
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle", // Instantly toggles mute on click
+    "on-click-right": "pavucontrol",                        // Right-click opens full mixer layout
+    "tooltip": false
+  },
+
+  "pulseaudio/slider": {
+    "min": 0,
+    "max": 100,
+    "orientation": "horizontal"
+  },
+
+  "wlr/taskbar": {
+    "format": "{icon}",
+    "icon-size": 18,
+    "tooltip-format": "{title}",
+    "on-click": "activate"
+  },
+
+  "clock#date": {
+    "format": "  {:%a %b %d}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+  },
+  "battery": {
+    "format": " {capacity}% ",
+    "interval": 30
+  },
+
+  "clock#time": {
+    "format": "{:%H:%M}",
+    "on-click": "alacritty -e sudo timedatectl set-ntp true"
+  },
+
+  "network": {
+    "format-wifi": "  {essid}",
+    "format-disconnected": "Disconnected",
+    "tooltip-format": "Signal Strength: {signalStrength}%",
+    "on-click": "alacritty -e bash -c 'SUBNET=$(ip -o -4 route show to default | awk \"{print \\$5}\" | xargs ip -o -4 addr show dev | awk \"{print \\$4}\"); sudo nmap -sn $SUBNET; exec bash'"
+
+  },
+
+  "custom/logo": {
+    "format": "∫ Cyanswan27_ps",
+    "tooltip": false,
+    "on-click": "firefox https://spindys.net"
+  },
+
+  "custom/terminal": {
+    "format": " [cyanswan27@arch ~]$ ",
+    "on-click": "alacritty",
+    "tooltip-format": "/bin/bash"
+  }
+}
+
